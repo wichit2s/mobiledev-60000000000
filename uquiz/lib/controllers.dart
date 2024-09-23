@@ -16,20 +16,18 @@ class UQuizController extends GetxController {
   final passwordController = TextEditingController();
 
   Future<void> authen(String email, String password) async {
-    try {
       final res = pb.admins.authWithPassword(email, password);
       isAdmin = true.obs;
-      print('admin logged in: ${email}');
       if (pb.authStore.isValid) {
+        print('admin logged in: ${email}');
         Get.to(()=> const MemberListPage());
-      }
-    } catch (e) {
-      final res = pb.collection('users').authWithPassword(email, password);
-      isAdmin = false.obs;
-      print('user logged in: ${email}');
-      if (pb.authStore.isValid) {
-      Get.to(()=> const Shopping());
+      } else {
+        final res = pb.collection('users').authWithPassword(email, password);
+        isAdmin = false.obs;
+        if (pb.authStore.isValid) {
+          print('user logged in: ${email}');
+          Get.to(()=> const Shopping());
+        }
       }
     }
   }
-}
